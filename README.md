@@ -3,6 +3,11 @@ This package contains implementation of sequential properties representation sch
 
 *Otović, E., Njirjak, M., Kalafatovic, D., & Mauša, G. (2022). Sequential Properties Representation Scheme for Recurrent Neural Network-Based Prediction of Therapeutic Peptides. Journal of Chemical Information and Modeling, 62(12), 2961-2972.*
 
+You can install this package manually from this repository or from PyPI repository with
+````
+pip install seqprops
+````
+
 ### Usage
 ````
 from seqprops import SequentialPropertiesEncoder
