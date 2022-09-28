@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Otović"
+  given-names: "Erik"
+  orcid: "https://orcid.org/0000-0001-5713-5879"
+- family-names: "Njirjak"
+  given-names: "Marko"
+  orcid: "https://orcid.org/0000-0003-0274-4866"
+- family-names: "Kalafatovic"
+  given-names: "Daniela"
+  orcid: "https://orcid.org/0000-0002-9685-1162"
+- family-names: "Mauša"
+  given-names: "Goran"
+  orcid: "https://orcid.org/0000-0002-0643-4577"
+title: "Sequential properties peptide representation scheme"
+version: 1.0.2
+date-released: 2022-09-28
+url: "https://github.com/eotovic/seqprops"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Otović"
+    given-names: "Erik"
+    orcid: "https://orcid.org/0000-0001-5713-5879"
+  - family-names: "Njirjak"
+    given-names: "Marko"
+    orcid: "https://orcid.org/0000-0003-0274-4866"
+  - family-names: "Kalafatovic"
+    given-names: "Daniela"
+    orcid: "https://orcid.org/0000-0002-9685-1162"
+  - family-names: "Mauša"
+    given-names: "Goran"
+    orcid: "https://orcid.org/0000-0002-0643-4577"
+  doi: "10.1021/acs.jcim.2c00526"
+  journal: "Journal of Chemical Information and Modeling"
+  month: 6
+  start: 2961
+  end: 2972
+  title: "Sequential Properties Representation Scheme for Recurrent Neural Network-Based Prediction of Therapeutic Peptides"
+  issue: 12
+  volume: 62
+  year: 2022

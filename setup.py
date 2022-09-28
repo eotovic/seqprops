@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='seqprops',
-    version='1.0.1',
+    version='1.0.2',
     license='GPL3',
     author="Erik Otović",
     author_email='erik.otovic@gmail.com',
     url='https://github.com/eotovic/seqprops',
     keywords='sequential properties physicochemical machine learning peptides proteins',
     install_requires=[
-          'pandas', 'numpy', 'scikit-learn'
+          'pandas', 'numpy', 'scikit-learn', 'dask', 'distributed'
       ],
     packages=["seqprops", "seqprops.data"],
     package_dir={'seqprops': 'seqprops', 'seqprops.data': 'seqprops/data'},

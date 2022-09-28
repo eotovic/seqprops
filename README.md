@@ -1,5 +1,7 @@
 ## Sequential properties - peptide representation scheme
-This package contains implementation of sequential properties representation scheme from the paper "Sequential properties representation scheme for recurrent neural network based prediction of therapeutic peptides".
+This package contains implementation of sequential properties representation scheme from the paper "Sequential properties representation scheme for recurrent neural network based prediction of therapeutic peptides". If you use this package in your work, please cite it as below or use the citation option in the side menu.
+
+*Otović, E., Njirjak, M., Kalafatovic, D., & Mauša, G. (2022). Sequential Properties Representation Scheme for Recurrent Neural Network-Based Prediction of Therapeutic Peptides. Journal of Chemical Information and Modeling, 62(12), 2961-2972.*
 
 ### Usage
 ````
@@ -50,4 +52,4 @@ To manually select specific properties:
 encoder.select_properties(['MSWHIM_MSWHIM3', 'tScales_T1'])
 ````
 
-For automatic feature selection, the users are referred to function <em>feature_selection</em> and usage example [here](https://github.com/ecokeco/seqprops_cs)
+For automatic feature selection, the users are referred to function <em>feature_selection</em> and usage example [here](https://github.com/eotovic/seqprops_therapeutic)

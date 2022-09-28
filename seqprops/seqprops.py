@@ -138,7 +138,6 @@ class SequentialPropertiesEncoder:
         X_test, y_test = X[test_idx], y[test_idx]
 
         y_pred = train_predict_fn(X_train, y_train, X_test)
-        print("Predict done {}".format(X.shape))
         return (y_test, y_pred)
 
     def _compute_cross_val_score(self, scorer, test_outputs):
@@ -159,9 +158,6 @@ class SequentialPropertiesEncoder:
         scores = [scorer._score_func(y_true, y_pred) for y_true, y_pred in test_outputs]
         return np.mean(scores)
 
-
-    # Scoring: str or create your own with make_scorer. Uvijek se maksimizira.
-    # score_calculation_method: može biti korisno kada se koristi LeaveOneOut (cross_val_concat)   score_calculation_method="cross_val_mean", 
     def feature_selection(self, train_predict_fn, sequences, y, nb_features, scoring, cv, direction='forward', autostop_patience=3, dask_client=None):
         """
         Performs feature selection using Sequential Feature Selection algorithm.
@@ -174,7 +170,9 @@ class SequentialPropertiesEncoder:
         with optimal feature set. Selected features can be retrieved
         with get_selected_properties().
 
-        Computation if executed in parallel using Dask backend.
+        Computation is executed in parallel using Dask backend. This function can be
+        memory intensive depending on the amount of data you have. If it fails, use fewer
+        workers per node.
 
         Parameters
         ----------
@@ -187,13 +185,16 @@ class SequentialPropertiesEncoder:
                                       Specify "auto" if you would like to automatically stop feature
                                       selection when score has not increased for autostop_patience iterations.
         scoring (str or scikit-learn's scorer) : Score which should be used to evaluate the features (e.g. 'roc_auc')
-                                                 or make your own scorer with make_scorer function.
+                                                 or make your own scorer with make_scorer function. This value is
+                                                 always maximized.
         cv : Cross validation for feature evaluation (e.g. StratifiedKFold).
         direction (str) : Algorithm starts with empty feature set which is expanded each iteration if this 
                           argument is set to "forward". Algorithm starts with all available features and 
                           at each iteration removes the worst feature from feature set if this argument 
                           is set to "backward". Depending on the number of features, one may be faster
                           or slower.
+        autostop_patience (int) : The maximal number of iterations that can pass without triggering 
+                                  autostop. Set nb_features="auto" to use this funcitonality.
         dask_client : Dask client which will be used for paralellization.
         
 
@@ -213,6 +214,8 @@ class SequentialPropertiesEncoder:
             selected_features = []
         elif direction == 'backward':
             selected_features = list(range(len(all_features)))
+        else:
+            raise("Invalid value for direction parameter.")
 
         history = []
         self.select_properties(self.get_available_properties())
@@ -220,8 +223,9 @@ class SequentialPropertiesEncoder:
         X_future = dask_client.scatter(X, broadcast=True)
         y_future = dask_client.scatter(y, broadcast=True)
 
-        autostop_maximum = 0
+        autostop_maximum = None
         autostop_counter = 0
+        # nb_features is either an integer or string "auto"
         while len(selected_features) != nb_features:    
             scores = []
             for feature_idx in features_to_consider:
@@ -240,29 +244,30 @@ class SequentialPropertiesEncoder:
                     cross_val_outputs.append(dask_client.submit(self._train_and_predict, train_predict_fn, X_future, y_future, current_features, train_idx, test_idx, pure=False))
                 scores.append(dask_client.submit(self._compute_cross_val_score, scorer, cross_val_outputs, pure=False))
            
+           # Obtain scores for all features and select the one with the highest score
             scores = dask_client.gather(scores)
             best_idx = np.argmax(scores)
             best_feature_idx = features_to_consider[best_idx]
-            best_feature_name = all_features[best_feature_idx]
             best_feature_score = scores[best_idx]
+            
+            # Autostop
+            if nb_features == "auto":
+                if autostop_maximum is None or best_feature_score > autostop_maximum:
+                    autostop_maximum = best_feature_score
+                    autostop_counter = 0
+                else:
+                    autostop_counter += 1
+                    if autostop_counter > autostop_patience:
+                        break
 
             features_to_consider.remove(best_feature_idx)
             if direction == 'forward':
                 selected_features.append(best_feature_idx)
-                print("Adding feature {}".format(best_feature_name))
             elif direction == 'backward':
                 selected_features.remove(best_feature_idx)
 
             selected_features_names = [all_features[feature_idx] for feature_idx in selected_features]
             history.append({'score': best_feature_score, 'selected_features': selected_features_names})
-
-            if nb_features == "auto" and best_feature_score > autostop_maximum:
-                autostop_maximum = best_feature_score
-                autostop_counter = 0
-            else:
-                autostop_counter += 1
-                if autostop_counter == autostop_patience:
-                    break
 
 
         X_future.release()
