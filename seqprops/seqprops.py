@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from io import BytesIO
-import importlib
+import importlib.resources
 from sklearn.metrics import get_scorer
 
 class SequentialPropertiesEncoder:

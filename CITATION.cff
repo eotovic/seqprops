@@ -14,7 +14,7 @@ authors:
   given-names: "Goran"
   orcid: "https://orcid.org/0000-0002-0643-4577"
 title: "Sequential properties peptide representation scheme"
-version: 1.0.2
+version: 1.0.3
 date-released: 2022-09-28
 url: "https://github.com/eotovic/seqprops"
 preferred-citation:

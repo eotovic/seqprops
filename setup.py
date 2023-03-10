@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='seqprops',
-    version='1.0.2',
+    version='1.0.3',
     license='GPL3',
     author="Erik Otović",
     author_email='erik.otovic@gmail.com',
